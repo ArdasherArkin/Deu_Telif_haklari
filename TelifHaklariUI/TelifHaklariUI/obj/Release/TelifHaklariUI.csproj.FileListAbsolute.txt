@@ -1,0 +1,11 @@
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\bin\Release\TelifHaklariUI.exe.config
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\bin\Release\TelifHaklariUI.exe
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\bin\Release\TelifHaklariUI.pdb
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.csproj.AssemblyReference.cache
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.FormLogin.resources
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.FormMain.resources
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.Properties.Resources.resources
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.csproj.GenerateResource.cache
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.csproj.CoreCompileInputs.cache
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.exe
+C:\Users\xzemt\Deu_telif_haklari\TelifHaklariUI\TelifHaklariUI\obj\Release\TelifHaklariUI.pdb

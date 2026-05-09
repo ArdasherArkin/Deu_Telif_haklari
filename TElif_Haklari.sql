@@ -1,5 +1,7 @@
 create database Telif_Haklari
+go
 use Telif_Haklari
+go
 
 create table rol(
 	rolId int primary key identity(1,1),
@@ -68,6 +70,7 @@ create table telifHakki(
 	lisansBitis date,
 	durum nvarchar(50) default 'Aktif'
 )
+alter table telifhakki add constraint chk_tarih_kontrol check (lisansbitis >= lisansbaslangic);
 
 insert into eserTuru(turAdi) values ('İlim ve Edebiyat Eserleri'),
 									('Musiki Eserleri'),
@@ -130,6 +133,21 @@ begin
 end
 go
 
+go
+create function dbo.fn_yazarinEserSayisi (@sahipId int)
+returns int
+as
+begin
+    declare @toplam int;
+    
+    select @toplam = count(eserId) 
+    from eserler 
+    where sahipId = @sahipId;
+    
+    return @toplam;
+end;
+go
+
 create trigger trg_telifDurumOtomatize
 on telifHakki
 after insert, update 
@@ -179,6 +197,51 @@ begin
 end;
 go
 
+create procedure sp_kullaniciSil
+    @IslemYapanKullaniciId int,
+    @SilinecekKullaniciId int
+as
+begin
+    declare @RolAdi nvarchar(50);
+    
+    select @RolAdi = r.rolAdi
+    from kullanicilar k
+    join rol r on k.rolId = r.rolId
+    where k.kullaniciId = @IslemYapanKullaniciId;
+    
+    if @RolAdi = 'Admin'
+    begin
+        delete from kullanicilar where kullaniciId = @SilinecekKullaniciId;
+        print 'Kullanıcı başarıyla silindi.';
+    end
+    else
+    begin
+        print 'HATA: Sadece Admin kullanıcı silebilir!';
+    end
+end;
+go
+
+create procedure sp_girisYap
+    @KullaniciAdi nvarchar(50),
+    @Sifre nvarchar(50),
+    @SonucKullaniciId int output,
+    @SonucRolAdi nvarchar(50) output
+as
+begin
+    select @SonucKullaniciId = kullaniciId,
+           @SonucRolAdi = r.rolAdi
+    from kullanicilar k
+    join rol r on k.rolId = r.rolId
+    where k.kullaniciAdi = @KullaniciAdi
+      and k.sifre = @Sifre;
+    
+    if @SonucKullaniciId is null
+        print 'Giriş başarısız: Kullanıcı adı veya şifre hatalı.';
+    else
+        print 'Giriş başarılı. Hoş geldiniz, ' + @KullaniciAdi + ' (Rol: ' + @SonucRolAdi + ')';
+end;
+go
+
 select 
     e.eseradi as [eser], 
     s.sahipad as [yazar], 
@@ -201,3 +264,50 @@ from eserturu t
 join eserler e on t.turId = e.turId
 group by t.turAdi
 having count(e.eserId) >= 1;
+
+select 
+    sahipad, 
+    ulke, 
+    dbo.fn_yazarinEserSayisi(sahipId) as [eser_sayisi]
+from esersahibi;
+
+select 
+    e.eseradi, 
+    dbo.fn_telifDurumuKontrol(th.lisansbitis) as [telif_durumu]
+from eserler e
+join telifhakki th on e.eserId = th.eserId;
+
+exec sp_eserVeTelifKaydet 
+    'Watchmen', '1986-09-01', 'İşlenme ve Derlemeler', 
+    'Alan Moore', 'Proprietory', 'JBC Yayıncılık', '2086-09-01';
+
+SELECT eserAdi, yayinTarihi FROM eserler WHERE yayinTarihi > '2000-01-01';
+
+SELECT e.eserAdi, t.turAdi
+FROM eserler e JOIN eserTuru t ON e.turId = t.turId
+WHERE t.turAdi = 'Sinema Eserleri';
+
+SELECT e.eserAdi, th.lisansBitis
+FROM telifHakki th JOIN eserler e ON th.eserId = e.eserId
+WHERE th.lisansBitis < GETDATE();
+
+select * from eserler
+select * from eserSahibi
+select * from eserTuru
+select * from kullanicilar
+select * from lisansTuru
+select * from rol
+select * from eserTuru
+select * from telifHakki
+select * from turkiyeDagitimSorumlusu
+select * from yetkiler
+
+create table silinecek_test (
+    id int identity(1,1),
+    notlar nvarchar(50)
+);
+
+drop table silinecek_test;
+
+insert into eserSahibi values ('Deneme1','DenemeUlke')
+delete from eserSahibi where sahipId=2
